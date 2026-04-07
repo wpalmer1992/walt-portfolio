@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Walt Palmer — Writer & Producer</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #C8191E;
+    --red-dark: #8B1215;
+    --red-bright: #E82025;
+    --cream: #F2EDE4;
+    --off-white: #FAF7F2;
+    --dark: #0E0E0C;
+    --near-black: #1A1918;
+    --text: #2A2826;
+    --text-light: #8A8480;
+    --grain-opacity: 0.4;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cream);
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ========== GRAIN OVERLAY ========== */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1000;
+    opacity: var(--grain-opacity);
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 200px 200px;
+    mix-blend-mode: multiply;
+  }
+
+  /* ========== HERO ========== */
+  .hero {
+    min-height: 100vh;
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    overflow: hidden;
+  }
+
+  /* Left side — image column with stacked frames */
+  .hero-images {
+    position: relative;
+    padding: 3rem 2rem 3rem 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+    z-index: 2;
+  }
+
+  .img-frame {
+    width: 280px;
+    aspect-ratio: 16/9;
+    background: var(--near-black);
+    position: relative;
+    overflow: hidden;
+    border: none;
+    opacity: 0;
+    transform: translateX(-40px);
+    animation: slideInLeft 0.8s ease forwards;
+  }
+
+  .img-frame:nth-child(1) { animation-delay: 0.3s; }
+  .img-frame:nth-child(2) { animation-delay: 0.5s; margin-left: 2rem; }
+  .img-frame:nth-child(3) { animation-delay: 0.7s; margin-left: 0.5rem; }
+
+  /* Placeholder content for image frames */
+  .img-frame::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--near-black) 0%, #2A2220 50%, var(--near-black) 100%);
+  }
+
+  .img-frame::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(200,25,30,0.15) 0%, transparent 60%);
+  }
+
+  .img-frame .frame-label {
+    position: absolute;
+    bottom: 8px;
+    left: 10px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    z-index: 2;
+  }
+
+  /* Right side — massive type */
+  .hero-type {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 3rem 3rem 3rem 0;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Giant background face/texture effect */
+  .hero-bg-texture {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 70% 40%, rgba(200,25,30,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .hero-name {
+    font-family: 'Anton', sans-serif;
+    text-transform: lowercase;
+    line-height: 0.88;
+    letter-spacing: -0.02em;
+    color: var(--red);
+    opacity: 0;
+    animation: fadeIn 0.8s ease 0.4s forwards;
+  }
+
+  .hero-name .first {
+    font-size: clamp(5rem, 14vw, 12rem);
+    display: block;
+  }
+
+  .hero-name .last {
+    font-size: clamp(5rem, 14vw, 12rem);
+    display: block;
+    color: var(--dark);
+  }
+
+  .hero-descriptor {
+    font-family: 'Barlow', sans-serif;
+    font-weight: 500;
+    font-size: clamp(0.9rem, 1.5vw, 1.15rem);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text);
+    margin-top: 1.5rem;
+    opacity: 0;
+    animation: fadeIn 0.8s ease 0.7s forwards;
+  }
+
+  .hero-descriptor strong {
+    font-weight: 700;
+    color: var(--dark);
+  }
+
+  /* ========== HALFTONE DIVIDER ========== */
+  .halftone-divider {
+    height: 80px;
+    background: var(--red);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .halftone-divider::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, var(--red) 1px, transparent 1px);
+    background-size: 6px 6px;
+    opacity: 0.3;
+  }
+
+  .divider-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4rem;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.3em;
+    color: rgba(255,255,255,0.7);
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  /* ========== STATS ========== */
+  .stats-section {
+    background: var(--dark);
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .stat-block {
+    padding: 3rem 2rem;
+    text-align: center;
+    border-right: 1px solid rgba(255,255,255,0.06);
+    position: relative;
+    overflow: hidden;
+    transition: background 0.5s;
+  }
+
+  .stat-block:last-child { border-right: none; }
+
+  .stat-block:hover {
+    background: rgba(200,25,30,0.1);
+  }
+
+  .stat-block::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--red);
+    transform: scaleX(0);
+    transition: transform 0.5s ease;
+    transform-origin: left;
+  }
+
+  .stat-block:hover::after { transform: scaleX(1); }
+
+  .stat-value {
+    font-family: 'Anton', sans-serif;
+    font-size: 3.5rem;
+    color: var(--cream);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(242,237,228,0.35);
+    margin-top: 0.5rem;
+  }
+
+  /* ========== ABOUT / INTRO ========== */
+  .intro-section {
+    padding: 6rem 3rem;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .intro-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.4em;
+    color: var(--red);
+    margin-bottom: 2rem;
+  }
+
+  .intro-text {
+    font-family: 'Barlow', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 300;
+    line-height: 1.8;
+    color: var(--text);
+  }
+
+  .intro-text strong {
+    font-weight: 600;
+    color: var(--dark);
+  }
+
+  /* ========== EXPERIENCE ========== */
+  .exp-section {
+    padding: 0 3rem 6rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .exp-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    padding-bottom: 1rem;
+    border-bottom: 3px solid var(--dark);
+  }
+
+  .exp-header h2 {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    text-transform: uppercase;
+    color: var(--dark);
+    line-height: 1;
+  }
+
+  .exp-header .count {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    color: var(--text-light);
+    text-transform: uppercase;
+  }
+
+  /* Experience card — poster/editorial layout */
+  .exp-card {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 2.5rem;
+    padding: 2.5rem 0;
+    border-bottom: 1px solid rgba(14,14,12,0.1);
+    opacity: 0;
+    transform: translateY(25px);
+    transition: all 0.7s ease;
+  }
+
+  .exp-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .exp-card:last-child { border-bottom: none; }
+
+  .exp-sidebar {
+    padding-top: 0.2rem;
+  }
+
+  .exp-dates {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    color: var(--red);
+  }
+
+  .exp-duration {
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.75rem;
+    color: var(--text-light);
+    margin-top: 0.2rem;
+  }
+
+  .exp-body h3 {
+    font-family: 'Anton', sans-serif;
+    font-size: 1.8rem;
+    text-transform: uppercase;
+    color: var(--dark);
+    line-height: 1.1;
+  }
+
+  .exp-body .company {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+    color: var(--red);
+    margin-top: 0.1rem;
+    margin-bottom: 1rem;
+  }
+
+  .exp-body p {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--text);
+    font-weight: 300;
+  }
+
+  .exp-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 1rem;
+  }
+
+  .tag {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 0.3rem 0.7rem;
+    border: 1.5px solid var(--dark);
+    color: var(--dark);
+    transition: all 0.3s;
+  }
+
+  .tag:hover {
+    background: var(--red);
+    border-color: var(--red);
+    color: var(--cream);
+  }
+
+  /* ========== CAPABILITIES ========== */
+  .cap-section {
+    background: var(--red);
+    padding: 5rem 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cap-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 20% 80%, rgba(0,0,0,0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0,0,0,0.1) 0%, transparent 40%);
+    pointer-events: none;
+  }
+
+  .cap-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .cap-title {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    text-transform: uppercase;
+    color: var(--cream);
+    margin-bottom: 3rem;
+    padding-bottom: 1rem;
+    border-bottom: 3px solid rgba(242,237,228,0.3);
+  }
+
+  .cap-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+    border: 1px solid rgba(242,237,228,0.2);
+  }
+
+  .cap-cell {
+    padding: 2.5rem;
+    border-right: 1px solid rgba(242,237,228,0.15);
+    border-bottom: 1px solid rgba(242,237,228,0.15);
+    transition: background 0.4s;
+  }
+
+  .cap-cell:nth-child(2n) { border-right: none; }
+  .cap-cell:nth-child(n+3) { border-bottom: none; }
+
+  .cap-cell:hover { background: rgba(0,0,0,0.1); }
+
+  .cap-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: rgba(242,237,228,0.25);
+    line-height: 1;
+    margin-bottom: 0.8rem;
+  }
+
+  .cap-cell h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--cream);
+    margin-bottom: 0.5rem;
+  }
+
+  .cap-cell p {
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: rgba(242,237,228,0.6);
+    font-weight: 300;
+  }
+
+  /* ========== EDUCATION ========== */
+  .edu-section {
+    padding: 4rem 3rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .edu-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    padding: 2rem 0;
+    border-top: 3px solid var(--dark);
+    border-bottom: 1px solid rgba(14,14,12,0.1);
+  }
+
+  .edu-info h3 {
+    font-family: 'Anton', sans-serif;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    color: var(--dark);
+  }
+
+  .edu-info p {
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    font-weight: 300;
+    margin-top: 0.2rem;
+  }
+
+  .edu-honors {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  .honor {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.6rem;
+    border: 1.5px solid var(--red);
+    color: var(--red);
+  }
+
+  /* ========== FOOTER ========== */
+  footer {
+    background: var(--dark);
+    padding: 5rem 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  footer::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(200,25,30,0.08) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .footer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 3rem;
+    align-items: end;
+    position: relative;
+  }
+
+  .footer-cta h2 {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    text-transform: uppercase;
+    color: var(--cream);
+    line-height: 1;
+  }
+
+  .footer-cta h2 span {
+    color: var(--red);
+  }
+
+  .footer-cta .sub {
+    font-family: 'Barlow', sans-serif;
+    font-size: 1rem;
+    font-weight: 300;
+    color: rgba(242,237,228,0.4);
+    margin-top: 1rem;
+  }
+
+  .footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    align-items: flex-end;
+  }
+
+  .footer-links a {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(242,237,228,0.5);
+    text-decoration: none;
+    transition: all 0.3s;
+    position: relative;
+  }
+
+  .footer-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1.5px;
+    background: var(--red);
+    transition: width 0.3s ease;
+  }
+
+  .footer-links a:hover {
+    color: var(--cream);
+  }
+
+  .footer-links a:hover::after { width: 100%; }
+
+  .footer-bottom {
+    max-width: 1100px;
+    margin: 3rem auto 0;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(242,237,228,0.06);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(242,237,228,0.2);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* ========== ANIMATIONS ========== */
+  @keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-40px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* ========== RESPONSIVE ========== */
+  @media (max-width: 900px) {
+    .hero {
+      grid-template-columns: 1fr;
+      min-height: auto;
+    }
+    .hero-images {
+      padding: 3rem 2rem 1rem;
+      flex-direction: row;
+      overflow-x: auto;
+      gap: 0.5rem;
+    }
+    .img-frame {
+      width: 200px;
+      min-width: 200px;
+      margin-left: 0 !important;
+    }
+    .hero-type { padding: 1rem 2rem 3rem; }
+    .stats-section { grid-template-columns: repeat(2, 1fr); }
+    .exp-card { grid-template-columns: 1fr; gap: 0.5rem; }
+    .cap-grid { grid-template-columns: 1fr; }
+    .cap-cell { border-right: none !important; border-bottom: 1px solid rgba(242,237,228,0.15) !important; }
+    .cap-cell:last-child { border-bottom: none !important; }
+    .exp-section, .edu-section, .intro-section { padding-left: 2rem; padding-right: 2rem; }
+    footer { padding: 4rem 2rem; }
+    .footer-inner { grid-template-columns: 1fr; }
+    .footer-links { align-items: flex-start; }
+  }
+
+  @media (max-width: 500px) {
+    .stats-section { grid-template-columns: 1fr 1fr; }
+    .stat-value { font-size: 2.5rem; }
+    .hero-name .first, .hero-name .last { font-size: 4rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== HERO ========== -->
+<header class="hero">
+  <div class="hero-bg-texture"></div>
+
+  <!-- Left: stacked image frames -->
+  <div class="hero-images">
+    <div class="img-frame">
+      <span class="frame-label">Reel 01</span>
+    </div>
+    <div class="img-frame">
+      <span class="frame-label">Reel 02</span>
+    </div>
+    <div class="img-frame">
+      <span class="frame-label">Reel 03</span>
+    </div>
+  </div>
+
+  <!-- Right: massive name -->
+  <div class="hero-type">
+    <div class="hero-name">
+      <span class="first">walt</span>
+      <span class="last">palmer</span>
+    </div>
+    <div class="hero-descriptor">
+      Writing &amp; Producing<br>in <strong>Los Angeles</strong>
+    </div>
+  </div>
+</header>
+
+<!-- ========== HALFTONE DIVIDER ========== -->
+<div class="halftone-divider">
+  <div class="divider-text">
+    <span>SNAPCHAT</span>
+    <span>PODCASTS</span>
+    <span>VR</span>
+    <span>GAMES</span>
+    <span>LIVE SHOWS</span>
+    <span>INTERACTIVE</span>
+  </div>
+</div>
+
+<!-- ========== STATS ========== -->
+<div class="stats-section">
+  <div class="stat-block">
+    <div class="stat-value">156+</div>
+    <div class="stat-label">Episodes Produced</div>
+  </div>
+  <div class="stat-block">
+    <div class="stat-value">7M</div>
+    <div class="stat-label">Daily Active Users</div>
+  </div>
+  <div class="stat-block">
+    <div class="stat-value">3M+</div>
+    <div class="stat-label">Podcast Downloads</div>
+  </div>
+  <div class="stat-block">
+    <div class="stat-value">#1</div>
+    <div class="stat-label">Apple Podcasts</div>
+  </div>
+</div>
+
+<!-- ========== INTRO ========== -->
+<section class="intro-section">
+  <div class="intro-label">ABOUT</div>
+  <p class="intro-text">
+    A writer and producer with <strong>seven years</strong> building stories for every screen — from Snapchat series reaching <strong>millions daily</strong>, to a <strong>#1 podcast</strong> on Apple, VR-powered live shows, and interactive puzzle games delivered to your door.
+  </p>
+</section>
+
+<!-- ========== EXPERIENCE ========== -->
+<section class="exp-section">
+  <div class="exp-header">
+    <h2>Experience</h2>
+    <span class="count">2016 — Present</span>
+  </div>
+
+  <div class="exp-card">
+    <div class="exp-sidebar">
+      <div class="exp-dates">2022 — NOW</div>
+      <div class="exp-duration">3+ years</div>
+    </div>
+    <div class="exp-body">
+      <h3>Studio Content Producer</h3>
+      <div class="company">PortalOne, Inc</div>
+      <p>Producing the Arcade Show — a daily late-night format where gaming meets live entertainment. 156+ episodes with talent including Demi Lovato, Josh Richards, and Nolan Bushnell. Developed interactive concepts bridging TV and VR.</p>
+      <div class="exp-tags">
+        <span class="tag">Showrunning</span>
+        <span class="tag">VR / Interactive</span>
+        <span class="tag">Live Production</span>
+        <span class="tag">Talent</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="exp-card">
+    <div class="exp-sidebar">
+      <div class="exp-dates">2021 — 2022</div>
+      <div class="exp-duration">1 yr 8 mos</div>
+    </div>
+    <div class="exp-body">
+      <h3>Head of Content</h3>
+      <div class="company">Bite.Delivery</div>
+      <p>Led content for at-home interactive dining experiences — puzzle games paired with food delivery. 15 games for 10K customers across LA and Philadelphia. Managed 8 designers and editors across print, motion, and video.</p>
+      <div class="exp-tags">
+        <span class="tag">Game Design</span>
+        <span class="tag">Product</span>
+        <span class="tag">Team Lead</span>
+        <span class="tag">Physical + Digital</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="exp-card">
+    <div class="exp-sidebar">
+      <div class="exp-dates">2018 — 2020</div>
+      <div class="exp-duration">2 yrs 1 mo</div>
+    </div>
+    <div class="exp-body">
+      <h3>Head of Content / Showrunner</h3>
+      <div class="company">Solve</div>
+      <p>Ran Solve's true-crime creative operation. Launched "Solve: The Podcast" on iHeartRadio — #1 on Apple Podcasts, 3M+ downloads. Daily Snapchat series for 3M users. Choice-based mobile game. Team of 15.</p>
+      <div class="exp-tags">
+        <span class="tag">Podcasts</span>
+        <span class="tag">Snapchat</span>
+        <span class="tag">Mobile Games</span>
+        <span class="tag">15-Person Team</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="exp-card">
+    <div class="exp-sidebar">
+      <div class="exp-dates">2016 — 2018</div>
+      <div class="exp-duration">2 yrs 9 mos</div>
+    </div>
+    <div class="exp-body">
+      <h3>Writer</h3>
+      <div class="company">Vertical Networks</div>
+      <p>Original content for mobile-first digital media. 50 editions of Brother on Snapchat. 20 video series averaging 7M daily active users. Cross-platform social strategy.</p>
+      <div class="exp-tags">
+        <span class="tag">Writing</span>
+        <span class="tag">Social Strategy</span>
+        <span class="tag">Digital Publishing</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== CAPABILITIES ========== -->
+<section class="cap-section">
+  <div class="cap-inner">
+    <div class="cap-title">What I Do</div>
+    <div class="cap-grid">
+      <div class="cap-cell">
+        <div class="cap-num">01</div>
+        <h3>Showrunning & Production</h3>
+        <p>End-to-end content production for digital series, live shows, and interactive experiences at daily scale.</p>
+      </div>
+      <div class="cap-cell">
+        <div class="cap-num">02</div>
+        <h3>Writing & Narrative</h3>
+        <p>Scripted series, podcasts, game narratives, branded content, and marketing copy across platforms.</p>
+      </div>
+      <div class="cap-cell">
+        <div class="cap-num">03</div>
+        <h3>Interactive & Immersive</h3>
+        <p>New entertainment at the intersection of gaming, VR, live-action, and physical experiences.</p>
+      </div>
+      <div class="cap-cell">
+        <div class="cap-num">04</div>
+        <h3>Team & Talent</h3>
+        <p>Leading creative teams up to 15 and managing high-profile talent and brand partnerships.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== EDUCATION ========== -->
+<section class="edu-section">
+  <div class="edu-row">
+    <div class="edu-info">
+      <h3>Temple University</h3>
+      <p>B.A. Film & Media Arts · 2011–2015</p>
+    </div>
+    <div class="edu-honors">
+      <span class="honor">Magna Cum Laude</span>
+      <span class="honor">Honors Program</span>
+      <span class="honor">Dean's List</span>
+      <span class="honor">London Scholar</span>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-cta">
+      <h2>LET'S MAKE<br>SOMETHING <span>GREAT.</span></h2>
+      <p class="sub">Available for full-time and select freelance projects.</p>
+    </div>
+    <div class="footer-links">
+      <a href="mailto:walter.palmeriv@gmail.com">walter.palmeriv@gmail.com</a>
+      <a href="tel:215-435-8327">215-435-8327</a>
+      <a href="https://www.linkedin.com/in/walt-palmer-95430338/">LinkedIn</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Walt Palmer</span>
+    <span>Los Angeles, CA</span>
+  </div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.exp-card').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
