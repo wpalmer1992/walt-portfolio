@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clearing My Name — Walt Palmer</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #C8191E;
+    --cream: #F2EDE4;
+    --dark: #0E0E0C;
+    --near-black: #1A1918;
+    --text: #2A2826;
+    --text-light: #8A8480;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cream);
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 200px 200px;
+    mix-blend-mode: multiply;
+  }
+
+  /* NAV */
+  .site-nav {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 900;
+    padding: 1.5rem 2.5rem;
+    display: flex;
+    gap: 2.5rem;
+    align-items: center;
+  }
+
+  .site-nav a {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--cream);
+    text-decoration: none;
+    position: relative;
+    transition: color 0.3s;
+  }
+
+  .site-nav a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1.5px;
+    background: var(--red);
+    transition: width 0.3s ease;
+  }
+
+  .site-nav a:hover::after { width: 100%; }
+
+  /* PAGE HEADER */
+  .page-header {
+    background: var(--dark);
+    padding: 10rem 3rem 6rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .page-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 70% 50%, rgba(200,25,30,0.1) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .page-header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .page-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.4em;
+    color: var(--red);
+    margin-bottom: 1.5rem;
+  }
+
+  .page-title {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(3rem, 10vw, 8rem);
+    text-transform: uppercase;
+    color: var(--cream);
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+  }
+
+  .page-title span { color: var(--red); }
+
+  /* CONTENT */
+  .page-content {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 6rem 3rem;
+  }
+
+  .coming-soon {
+    font-family: 'Barlow', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 300;
+    color: var(--text-light);
+    border-top: 3px solid var(--dark);
+    padding-top: 2rem;
+  }
+
+  /* BACK LINK */
+  .back-link {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(242,237,228,0.4);
+    text-decoration: none;
+    transition: color 0.3s;
+    margin-top: 2rem;
+    display: block;
+  }
+
+  .back-link:hover { color: var(--cream); }
+
+  @media (max-width: 900px) {
+    .page-header { padding: 8rem 2rem 4rem; }
+    .page-content { padding: 4rem 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="index.html#about">About</a>
+  <a href="writing.html">Writing</a>
+  <a href="clearing-my-name.html">Clearing My Name</a>
+</nav>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="page-label">Walt Palmer</div>
+    <h1 class="page-title">Clearing<br><span>My Name</span></h1>
+    <a href="index.html" class="back-link">← Back</a>
+  </div>
+</div>
+
+<div class="page-content">
+  <p class="coming-soon">Content coming soon.</p>
+</div>
+
+</body>
+</html>

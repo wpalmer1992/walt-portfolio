@@ -76,9 +76,9 @@
     animation: slideInLeft 0.8s ease forwards;
   }
 
-  .img-frame:nth-child(1) { animation-delay: 0.3s; }
-  .img-frame:nth-child(2) { animation-delay: 0.5s; margin-left: 2rem; }
-  .img-frame:nth-child(3) { animation-delay: 0.7s; margin-left: 0.5rem; }
+  .img-frame:nth-child(1) { animation: slideInLeft 0.5s ease 0.3s forwards, tuneIn 0.6s ease 0.8s both; }
+  .img-frame:nth-child(2) { animation: slideInLeft 0.5s ease 0.5s forwards, tuneIn 0.6s ease 1.0s both; margin-left: 2rem; }
+  .img-frame:nth-child(3) { animation: slideInLeft 0.5s ease 0.7s forwards, tuneIn 0.6s ease 1.2s both; margin-left: 0.5rem; }
 
   .img-frame video {
     position: absolute;
@@ -88,6 +88,25 @@
     object-fit: contain;
     object-position: center;
     display: block;
+  }
+
+  /* Scanline / static texture on empty frames */
+  .img-frame::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(255,255,255,0.08) 2px,
+        rgba(255,255,255,0.08) 4px
+      ),
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+    background-size: auto, 150px 150px;
+    z-index: 0;
+    pointer-events: none;
   }
 
   /* Overlay on top of video */
@@ -137,6 +156,7 @@
     color: var(--red);
     opacity: 0;
     animation: fadeIn 0.8s ease 0.4s forwards;
+    will-change: transform;
   }
 
   .hero-name .first {
@@ -216,7 +236,7 @@
 
   .intro-label {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 0.85rem;
+    font-size: 1.8rem;
     letter-spacing: 0.4em;
     color: var(--red);
     margin-bottom: 2rem;
@@ -235,12 +255,26 @@
     color: var(--dark);
   }
 
+  .intro-photo-wrap {
+    position: relative;
+    width: 100%;
+  }
+
+  .intro-photo-wrap::before {
+    content: '';
+    position: absolute;
+    inset: 12px -12px -12px 12px;
+    border: 2px solid var(--red);
+    z-index: 0;
+  }
+
   .intro-photo {
     width: 100%;
     aspect-ratio: 3/4;
     background: var(--near-black);
     position: relative;
     overflow: hidden;
+    z-index: 1;
   }
 
   .intro-photo img {
@@ -629,6 +663,47 @@
     justify-content: space-between;
   }
 
+  /* ========== NAV ========== */
+  .site-nav {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 900;
+    padding: 1.5rem 2.5rem;
+    display: flex;
+    gap: 2.5rem;
+    align-items: center;
+  }
+
+  .site-nav a {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text);
+    text-decoration: none;
+    position: relative;
+    transition: color 0.3s;
+  }
+
+  .site-nav a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1.5px;
+    background: var(--red);
+    transition: width 0.3s ease;
+  }
+
+  .site-nav a:hover { color: var(--dark); }
+  .site-nav a:hover::after { width: 100%; }
+
+  .site-nav.scrolled a { color: var(--cream); }
+  .site-nav.scrolled a:hover { color: var(--cream); }
+
   /* ========== SCROLL REVEAL ========== */
   .reveal {
     opacity: 0;
@@ -645,6 +720,19 @@
   @keyframes slideInLeft {
     from { opacity: 0; transform: translateX(-40px); }
     to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes tuneIn {
+    0%   { opacity: 0; }
+    10%  { opacity: 0.8; filter: brightness(2) contrast(3); }
+    15%  { opacity: 0.2; }
+    20%  { opacity: 0.9; filter: brightness(1.5) contrast(2); }
+    25%  { opacity: 0.3; }
+    35%  { opacity: 1; filter: brightness(1.2); }
+    50%  { opacity: 0.7; filter: brightness(0.8); }
+    60%  { opacity: 1; filter: brightness(1.1); }
+    75%  { opacity: 0.9; }
+    100% { opacity: 1; filter: brightness(1) contrast(1); }
   }
 
   @keyframes fadeIn {
@@ -689,6 +777,14 @@
 </head>
 <body>
 
+<!-- ========== NAV ========== -->
+<nav class="site-nav">
+  <a href="#about">About</a>
+  <a href="#reel">Reel</a>
+  <a href="writing.html">Writing</a>
+  <a href="clearing-my-name.html">Clearing My Name</a>
+</nav>
+
 <!-- ========== HERO ========== -->
 <header class="hero">
   <div class="hero-bg-texture"></div>
@@ -697,15 +793,12 @@
   <div class="hero-images">
     <div class="img-frame">
       <video src="reel01.mp4" autoplay muted loop playsinline></video>
-      <span class="frame-label">Reel 01</span>
     </div>
     <div class="img-frame">
       <video src="reel02.mp4" autoplay muted loop playsinline></video>
-      <span class="frame-label">Reel 02</span>
     </div>
     <div class="img-frame">
       <video src="reel03.mp4" autoplay muted loop playsinline></video>
-      <span class="frame-label">Reel 03</span>
     </div>
   </div>
 
@@ -735,7 +828,7 @@
 
 
 <!-- ========== INTRO ========== -->
-<section class="intro-section reveal">
+<section id="about" class="intro-section reveal">
   <div class="intro-inner">
     <div class="intro-copy">
       <div class="intro-label">ABOUT</div>
@@ -743,15 +836,17 @@
         A writer and producer with <strong>seven years</strong> building stories for every screen — from Snapchat series reaching <strong>millions daily</strong>, to a <strong>#1 podcast</strong> on Apple, VR-powered live shows, and interactive puzzle games delivered to your door.
       </p>
     </div>
-    <div class="intro-photo">
-      <img src="headshot.jpg" alt="Walt Palmer">
-      <div class="photo-grain"></div>
+    <div class="intro-photo-wrap">
+      <div class="intro-photo">
+        <img src="headshot.jpg" alt="Walt Palmer">
+        <div class="photo-grain"></div>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- ========== SIZZLE REEL ========== -->
-<section class="reel-section reveal">
+<section id="reel" class="reel-section reveal">
   <div class="reel-inner">
     <div class="reel-header">
       <h2>Sizzle <span>Reel</span></h2>
@@ -834,6 +929,34 @@
 </footer>
 
 <script>
+  const nav = document.querySelector('.site-nav');
+  const heroName = document.querySelector('.hero-name');
+  const heroDescriptor = document.querySelector('.hero-descriptor');
+  const introSection = document.querySelector('.intro-section');
+  const introCopy = document.querySelector('.intro-copy');
+  const introPhoto = document.querySelector('.intro-photo-wrap');
+
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    nav.classList.toggle('scrolled', scrollY > window.innerHeight * 0.7);
+
+    // Hero parallax
+    if (scrollY < window.innerHeight) {
+      const offset = scrollY * 0.4;
+      heroName.style.transform = `translateY(-${offset}px)`;
+      heroDescriptor.style.transform = `translateY(-${offset * 0.6}px)`;
+    }
+
+    // About parallax
+    const introTop = introSection.offsetTop;
+    const introBottom = introTop + introSection.offsetHeight;
+    if (scrollY + window.innerHeight > introTop && scrollY < introBottom) {
+      const offset = (scrollY - introTop) * 0.12;
+      introCopy.style.transform = `translateY(-${offset}px)`;
+      introPhoto.style.transform = `translateY(-${offset * 0.6}px)`;
+    }
+  });
+
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
