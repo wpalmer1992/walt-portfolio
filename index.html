@@ -27,6 +27,7 @@
     font-family: 'Barlow', sans-serif;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
 
   /* ========== GRAIN OVERLAY ========== */
@@ -79,19 +80,23 @@
   .img-frame:nth-child(2) { animation-delay: 0.5s; margin-left: 2rem; }
   .img-frame:nth-child(3) { animation-delay: 0.7s; margin-left: 0.5rem; }
 
-  /* Placeholder content for image frames */
-  .img-frame::before {
-    content: '';
+  .img-frame video {
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, var(--near-black) 0%, #2A2220 50%, var(--near-black) 100%);
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    display: block;
   }
 
+  /* Overlay on top of video */
   .img-frame::after {
     content: '';
     position: absolute;
     inset: 0;
     background: linear-gradient(180deg, rgba(200,25,30,0.15) 0%, transparent 60%);
+    z-index: 1;
   }
 
   .img-frame .frame-label {
@@ -102,8 +107,8 @@
     font-size: 0.6rem;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: rgba(255,255,255,0.3);
-    z-index: 2;
+    color: rgba(255,255,255,0.4);
+    z-index: 3;
   }
 
   /* Right side — massive type */
@@ -194,66 +199,19 @@
     overflow: hidden;
   }
 
-  /* ========== STATS ========== */
-  .stats-section {
-    background: var(--dark);
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  .stat-block {
-    padding: 3rem 2rem;
-    text-align: center;
-    border-right: 1px solid rgba(255,255,255,0.06);
-    position: relative;
-    overflow: hidden;
-    transition: background 0.5s;
-  }
-
-  .stat-block:last-child { border-right: none; }
-
-  .stat-block:hover {
-    background: rgba(200,25,30,0.1);
-  }
-
-  .stat-block::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 3px;
-    background: var(--red);
-    transform: scaleX(0);
-    transition: transform 0.5s ease;
-    transform-origin: left;
-  }
-
-  .stat-block:hover::after { transform: scaleX(1); }
-
-  .stat-value {
-    font-family: 'Anton', sans-serif;
-    font-size: 3.5rem;
-    color: var(--cream);
-    line-height: 1;
-  }
-
-  .stat-label {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 0.7rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: rgba(242,237,228,0.35);
-    margin-top: 0.5rem;
-  }
 
   /* ========== ABOUT / INTRO ========== */
   .intro-section {
     padding: 6rem 3rem;
-    max-width: 900px;
+    max-width: 1100px;
     margin: 0 auto;
-    text-align: center;
+  }
+
+  .intro-inner {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 5rem;
+    align-items: center;
   }
 
   .intro-label {
@@ -266,7 +224,7 @@
 
   .intro-text {
     font-family: 'Barlow', sans-serif;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 300;
     line-height: 1.8;
     color: var(--text);
@@ -277,129 +235,176 @@
     color: var(--dark);
   }
 
-  /* ========== EXPERIENCE ========== */
-  .exp-section {
-    padding: 0 3rem 6rem;
+  .intro-photo {
+    width: 100%;
+    aspect-ratio: 3/4;
+    background: var(--near-black);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .intro-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    mix-blend-mode: luminosity;
+    filter: contrast(1.2) brightness(0.88);
+  }
+
+  .photo-grain {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0.55;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 160px 160px;
+  }
+
+  .intro-photo::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 50%, rgba(200,25,30,0.25) 80%, rgba(14,14,12,0.5) 100%);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .intro-photo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 60% 0%, rgba(200,25,30,0.12) 0%, transparent 65%);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .intro-photo-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.2);
+  }
+
+  /* ========== SIZZLE REEL ========== */
+  .reel-section {
+    background: var(--dark);
+    padding: 6rem 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .reel-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 100%, rgba(200,25,30,0.1) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .reel-inner {
     max-width: 1100px;
     margin: 0 auto;
+    position: relative;
   }
 
-  .exp-header {
+  .reel-header {
     display: flex;
     align-items: baseline;
-    gap: 1rem;
-    margin-bottom: 3rem;
+    justify-content: space-between;
+    margin-bottom: 2.5rem;
     padding-bottom: 1rem;
-    border-bottom: 3px solid var(--dark);
+    border-bottom: 3px solid rgba(242,237,228,0.1);
   }
 
-  .exp-header h2 {
+  .reel-header h2 {
     font-family: 'Anton', sans-serif;
     font-size: clamp(2.5rem, 6vw, 4rem);
     text-transform: uppercase;
-    color: var(--dark);
+    color: var(--cream);
     line-height: 1;
   }
 
-  .exp-header .count {
+  .reel-header h2 span {
+    color: var(--red);
+  }
+
+  .reel-header .reel-sub {
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 0.75rem;
     letter-spacing: 0.15em;
-    color: var(--text-light);
     text-transform: uppercase;
+    color: rgba(242,237,228,0.3);
   }
 
-  /* Experience card — poster/editorial layout */
-  .exp-card {
-    display: grid;
-    grid-template-columns: 180px 1fr;
-    gap: 2.5rem;
-    padding: 2.5rem 0;
-    border-bottom: 1px solid rgba(14,14,12,0.1);
-    opacity: 0;
-    transform: translateY(25px);
-    transition: all 0.7s ease;
+  .reel-embed {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #0a0a08;
+    overflow: hidden;
   }
 
-  .exp-card.visible {
-    opacity: 1;
-    transform: translateY(0);
+  .reel-embed iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
   }
 
-  .exp-card:last-child { border-bottom: none; }
-
-  .exp-sidebar {
-    padding-top: 0.2rem;
-  }
-
-  .exp-dates {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1rem;
-    letter-spacing: 0.1em;
-    color: var(--red);
-  }
-
-  .exp-duration {
-    font-family: 'Barlow', sans-serif;
-    font-size: 0.75rem;
-    color: var(--text-light);
-    margin-top: 0.2rem;
-  }
-
-  .exp-body h3 {
-    font-family: 'Anton', sans-serif;
-    font-size: 1.8rem;
-    text-transform: uppercase;
-    color: var(--dark);
-    line-height: 1.1;
-  }
-
-  .exp-body .company {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 600;
-    font-size: 1rem;
-    letter-spacing: 0.05em;
-    color: var(--red);
-    margin-top: 0.1rem;
-    margin-bottom: 1rem;
-  }
-
-  .exp-body p {
-    font-size: 1rem;
-    line-height: 1.8;
-    color: var(--text);
-    font-weight: 300;
-  }
-
-  .exp-tags {
+  /* Placeholder state (no video yet) */
+  .reel-placeholder {
+    position: absolute;
+    inset: 0;
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    margin-top: 1rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    border: 1.5px solid rgba(242,237,228,0.08);
   }
 
-  .tag {
+  .reel-play-icon {
+    width: 64px;
+    height: 64px;
+    border: 2px solid var(--red);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .reel-play-icon svg {
+    width: 22px;
+    height: 22px;
+    fill: var(--red);
+    margin-left: 4px;
+  }
+
+  .reel-placeholder-label {
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 0.7rem;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.25em;
     text-transform: uppercase;
-    font-weight: 600;
-    padding: 0.3rem 0.7rem;
-    border: 1.5px solid var(--dark);
-    color: var(--dark);
-    transition: all 0.3s;
+    color: rgba(242,237,228,0.2);
   }
 
-  .tag:hover {
-    background: var(--red);
-    border-color: var(--red);
-    color: var(--cream);
-  }
 
   /* ========== CAPABILITIES ========== */
   .cap-section {
     background: var(--red);
-    padding: 5rem 3rem;
+    padding: 6rem 3rem;
     position: relative;
     overflow: hidden;
   }
@@ -473,14 +478,15 @@
     font-weight: 300;
   }
 
-  /* ========== EDUCATION ========== */
-  .edu-section {
-    padding: 4rem 3rem;
+
+  /* ========== RESUME ========== */
+  .resume-section {
+    padding: 6rem 3rem;
     max-width: 1100px;
     margin: 0 auto;
   }
 
-  .edu-row {
+  .resume-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -491,36 +497,40 @@
     border-bottom: 1px solid rgba(14,14,12,0.1);
   }
 
-  .edu-info h3 {
+  .resume-label {
     font-family: 'Anton', sans-serif;
     font-size: 1.5rem;
     text-transform: uppercase;
     color: var(--dark);
   }
 
-  .edu-info p {
-    font-family: 'Barlow', sans-serif;
-    font-size: 0.9rem;
-    color: var(--text-light);
-    font-weight: 300;
-    margin-top: 0.2rem;
-  }
-
-  .edu-honors {
+  .resume-download {
     display: flex;
-    gap: 0.4rem;
-    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--dark);
+    text-decoration: none;
+    padding: 0.6rem 1rem;
+    border: 1.5px solid var(--dark);
+    transition: all 0.3s;
   }
 
-  .honor {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 0.65rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 0.3rem 0.6rem;
-    border: 1.5px solid var(--red);
-    color: var(--red);
+  .resume-download:hover {
+    background: var(--red);
+    border-color: var(--red);
+    color: var(--cream);
+  }
+
+  .resume-download svg {
+    width: 13px;
+    height: 13px;
+    fill: currentColor;
+    flex-shrink: 0;
   }
 
   /* ========== FOOTER ========== */
@@ -619,6 +629,18 @@
     justify-content: space-between;
   }
 
+  /* ========== SCROLL REVEAL ========== */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
   /* ========== ANIMATIONS ========== */
   @keyframes slideInLeft {
     from { opacity: 0; transform: translateX(-40px); }
@@ -648,20 +670,19 @@
       margin-left: 0 !important;
     }
     .hero-type { padding: 1rem 2rem 3rem; }
-    .stats-section { grid-template-columns: repeat(2, 1fr); }
-    .exp-card { grid-template-columns: 1fr; gap: 0.5rem; }
     .cap-grid { grid-template-columns: 1fr; }
     .cap-cell { border-right: none !important; border-bottom: 1px solid rgba(242,237,228,0.15) !important; }
     .cap-cell:last-child { border-bottom: none !important; }
-    .exp-section, .edu-section, .intro-section { padding-left: 2rem; padding-right: 2rem; }
+    .intro-section, .resume-section { padding-left: 2rem; padding-right: 2rem; }
+    .reel-section, .cap-section { padding-left: 2rem; padding-right: 2rem; }
+    .intro-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+    .intro-photo { max-width: 320px; aspect-ratio: 4/5; }
     footer { padding: 4rem 2rem; }
     .footer-inner { grid-template-columns: 1fr; }
     .footer-links { align-items: flex-start; }
   }
 
   @media (max-width: 500px) {
-    .stats-section { grid-template-columns: 1fr 1fr; }
-    .stat-value { font-size: 2.5rem; }
     .hero-name .first, .hero-name .last { font-size: 4rem; }
   }
 </style>
@@ -675,12 +696,15 @@
   <!-- Left: stacked image frames -->
   <div class="hero-images">
     <div class="img-frame">
+      <video src="reel01.mp4" autoplay muted loop playsinline></video>
       <span class="frame-label">Reel 01</span>
     </div>
     <div class="img-frame">
+      <video src="reel02.mp4" autoplay muted loop playsinline></video>
       <span class="frame-label">Reel 02</span>
     </div>
     <div class="img-frame">
+      <video src="reel03.mp4" autoplay muted loop playsinline></video>
       <span class="frame-label">Reel 03</span>
     </div>
   </div>
@@ -700,7 +724,7 @@
 <!-- ========== HALFTONE DIVIDER ========== -->
 <div class="halftone-divider">
   <div class="divider-text">
-    <span>SNAPCHAT</span>
+    <span>VIDEO PRODUCTION</span>
     <span>PODCASTS</span>
     <span>VR</span>
     <span>GAMES</span>
@@ -709,115 +733,48 @@
   </div>
 </div>
 
-<!-- ========== STATS ========== -->
-<div class="stats-section">
-  <div class="stat-block">
-    <div class="stat-value">156+</div>
-    <div class="stat-label">Episodes Produced</div>
-  </div>
-  <div class="stat-block">
-    <div class="stat-value">7M</div>
-    <div class="stat-label">Daily Active Users</div>
-  </div>
-  <div class="stat-block">
-    <div class="stat-value">3M+</div>
-    <div class="stat-label">Podcast Downloads</div>
-  </div>
-  <div class="stat-block">
-    <div class="stat-value">#1</div>
-    <div class="stat-label">Apple Podcasts</div>
-  </div>
-</div>
 
 <!-- ========== INTRO ========== -->
-<section class="intro-section">
-  <div class="intro-label">ABOUT</div>
-  <p class="intro-text">
-    A writer and producer with <strong>seven years</strong> building stories for every screen — from Snapchat series reaching <strong>millions daily</strong>, to a <strong>#1 podcast</strong> on Apple, VR-powered live shows, and interactive puzzle games delivered to your door.
-  </p>
+<section class="intro-section reveal">
+  <div class="intro-inner">
+    <div class="intro-copy">
+      <div class="intro-label">ABOUT</div>
+      <p class="intro-text">
+        A writer and producer with <strong>seven years</strong> building stories for every screen — from Snapchat series reaching <strong>millions daily</strong>, to a <strong>#1 podcast</strong> on Apple, VR-powered live shows, and interactive puzzle games delivered to your door.
+      </p>
+    </div>
+    <div class="intro-photo">
+      <img src="headshot.jpg" alt="Walt Palmer">
+      <div class="photo-grain"></div>
+    </div>
+  </div>
 </section>
 
-<!-- ========== EXPERIENCE ========== -->
-<section class="exp-section">
-  <div class="exp-header">
-    <h2>Experience</h2>
-    <span class="count">2016 — Present</span>
-  </div>
-
-  <div class="exp-card">
-    <div class="exp-sidebar">
-      <div class="exp-dates">2022 — NOW</div>
-      <div class="exp-duration">3+ years</div>
+<!-- ========== SIZZLE REEL ========== -->
+<section class="reel-section reveal">
+  <div class="reel-inner">
+    <div class="reel-header">
+      <h2>Sizzle <span>Reel</span></h2>
+      <span class="reel-sub">Selected Work</span>
     </div>
-    <div class="exp-body">
-      <h3>Studio Content Producer</h3>
-      <div class="company">PortalOne, Inc</div>
-      <p>Producing the Arcade Show — a daily late-night format where gaming meets live entertainment. 156+ episodes with talent including Demi Lovato, Josh Richards, and Nolan Bushnell. Developed interactive concepts bridging TV and VR.</p>
-      <div class="exp-tags">
-        <span class="tag">Showrunning</span>
-        <span class="tag">VR / Interactive</span>
-        <span class="tag">Live Production</span>
-        <span class="tag">Talent</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="exp-card">
-    <div class="exp-sidebar">
-      <div class="exp-dates">2021 — 2022</div>
-      <div class="exp-duration">1 yr 8 mos</div>
-    </div>
-    <div class="exp-body">
-      <h3>Head of Content</h3>
-      <div class="company">Bite.Delivery</div>
-      <p>Led content for at-home interactive dining experiences — puzzle games paired with food delivery. 15 games for 10K customers across LA and Philadelphia. Managed 8 designers and editors across print, motion, and video.</p>
-      <div class="exp-tags">
-        <span class="tag">Game Design</span>
-        <span class="tag">Product</span>
-        <span class="tag">Team Lead</span>
-        <span class="tag">Physical + Digital</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="exp-card">
-    <div class="exp-sidebar">
-      <div class="exp-dates">2018 — 2020</div>
-      <div class="exp-duration">2 yrs 1 mo</div>
-    </div>
-    <div class="exp-body">
-      <h3>Head of Content / Showrunner</h3>
-      <div class="company">Solve</div>
-      <p>Ran Solve's true-crime creative operation. Launched "Solve: The Podcast" on iHeartRadio — #1 on Apple Podcasts, 3M+ downloads. Daily Snapchat series for 3M users. Choice-based mobile game. Team of 15.</p>
-      <div class="exp-tags">
-        <span class="tag">Podcasts</span>
-        <span class="tag">Snapchat</span>
-        <span class="tag">Mobile Games</span>
-        <span class="tag">15-Person Team</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="exp-card">
-    <div class="exp-sidebar">
-      <div class="exp-dates">2016 — 2018</div>
-      <div class="exp-duration">2 yrs 9 mos</div>
-    </div>
-    <div class="exp-body">
-      <h3>Writer</h3>
-      <div class="company">Vertical Networks</div>
-      <p>Original content for mobile-first digital media. 50 editions of Brother on Snapchat. 20 video series averaging 7M daily active users. Cross-platform social strategy.</p>
-      <div class="exp-tags">
-        <span class="tag">Writing</span>
-        <span class="tag">Social Strategy</span>
-        <span class="tag">Digital Publishing</span>
+    <div class="reel-embed">
+      <!-- Paste your video embed here, e.g.:
+           Vimeo:  <iframe src="https://player.vimeo.com/video/YOUR_ID" allowfullscreen></iframe>
+           YouTube: <iframe src="https://www.youtube.com/embed/YOUR_ID" allowfullscreen></iframe>
+      -->
+      <div class="reel-placeholder">
+        <div class="reel-play-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polygon points="5,3 19,12 5,21"/></svg>
+        </div>
+        <div class="reel-placeholder-label">Video coming soon</div>
       </div>
     </div>
   </div>
 </section>
+
 
 <!-- ========== CAPABILITIES ========== -->
-<section class="cap-section">
+<section class="cap-section reveal">
   <div class="cap-inner">
     <div class="cap-title">What I Do</div>
     <div class="cap-grid">
@@ -845,19 +802,15 @@
   </div>
 </section>
 
-<!-- ========== EDUCATION ========== -->
-<section class="edu-section">
-  <div class="edu-row">
-    <div class="edu-info">
-      <h3>Temple University</h3>
-      <p>B.A. Film & Media Arts · 2011–2015</p>
-    </div>
-    <div class="edu-honors">
-      <span class="honor">Magna Cum Laude</span>
-      <span class="honor">Honors Program</span>
-      <span class="honor">Dean's List</span>
-      <span class="honor">London Scholar</span>
-    </div>
+
+<!-- ========== RESUME ========== -->
+<section class="resume-section reveal">
+  <div class="resume-row">
+    <div class="resume-label">Resume</div>
+    <a href="resume.pdf" download class="resume-download">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 16l-6-6h4V4h4v6h4l-6 6zm-7 4h14v-2H5v2z"/></svg>
+      Download
+    </a>
   </div>
 </section>
 
@@ -883,11 +836,14 @@
 <script>
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) entry.target.classList.add('visible');
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
     });
   }, { threshold: 0.1 });
 
-  document.querySelectorAll('.exp-card').forEach(el => observer.observe(el));
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 </script>
 </body>
 </html>
