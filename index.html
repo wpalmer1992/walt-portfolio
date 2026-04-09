@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Walt Palmer — Writer & Producer</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230E0E0C'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial Black,sans-serif' font-weight='900' font-size='13' fill='%23C8191E' letter-spacing='-1'%3EWP%3C/text%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -74,6 +75,18 @@
     opacity: 0;
     transform: translateX(-40px);
     animation: slideInLeft 0.8s ease forwards;
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.5s ease;
+    z-index: 1;
+  }
+
+  .hero-images:hover .img-frame:not(:hover) {
+    transform: scale(0.92);
+    opacity: 0.7;
+  }
+
+  .img-frame:hover {
+    transform: scale(1.08) !important;
+    z-index: 10;
   }
 
   .img-frame:nth-child(1) { animation: slideInLeft 0.5s ease 0.3s forwards, tuneIn 0.6s ease 0.8s both; }
@@ -88,6 +101,45 @@
     object-fit: contain;
     object-position: center;
     display: block;
+    filter: grayscale(1) contrast(1.4) brightness(1.15);
+    transition: filter 0.6s ease;
+  }
+
+  .img-frame:hover video {
+    filter: grayscale(0) contrast(1.1) brightness(1);
+  }
+
+  /* Red overlay — fades out on hover */
+  .img-frame .reel-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.3);
+    mix-blend-mode: multiply;
+    z-index: 2;
+    transition: opacity 0.6s ease;
+    pointer-events: none;
+  }
+
+  .img-frame:hover .reel-overlay {
+    opacity: 0;
+  }
+
+  /* Heavy grain on frames */
+  .img-frame .reel-grain {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    opacity: 0.65;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 120px 120px;
+    transition: opacity 0.6s ease;
+  }
+
+  .img-frame:hover .reel-grain {
+    opacity: 0.25;
   }
 
   /* Scanline / static texture on empty frames */
@@ -483,7 +535,7 @@
   }
 
   .cap-cell:nth-child(2n) { border-right: none; }
-  .cap-cell:nth-child(n+3) { border-bottom: none; }
+  .cap-cell:nth-child(n+5) { border-bottom: none; }
 
   .cap-cell:hover { background: rgba(0,0,0,0.1); }
 
@@ -740,6 +792,125 @@
     to { opacity: 1; }
   }
 
+  /* ========== DOLPHIN MODE ========== */
+  #dolphin-btn {
+    background: none;
+    border: none;
+    color: var(--red);
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 0.2s;
+  }
+  #dolphin-btn:hover { color: var(--dark); }
+
+  body.dolphin-mode { cursor: none !important; }
+  body.dolphin-mode * { cursor: none !important; }
+
+  #dolphin-cursor {
+    position: fixed;
+    pointer-events: none;
+    z-index: 99999;
+    font-size: 2.2rem;
+    transform: translate(-50%, -50%);
+    filter: drop-shadow(0 0 8px rgba(255,100,255,0.9));
+  }
+
+  /* Flash overlay */
+  #dolphin-flash {
+    position: fixed;
+    inset: 0;
+    z-index: 99998;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 110, 247, 0.85);
+    pointer-events: none;
+    animation: dolphinFlash 1.6s ease forwards;
+  }
+  #dolphin-flash span {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(2.5rem, 8vw, 6rem);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-align: center;
+    animation: rainbowShift 0.3s linear infinite;
+    filter: drop-shadow(0 0 20px #fff) drop-shadow(0 0 40px #ff6ef7);
+  }
+  @keyframes dolphinFlash {
+    0%   { opacity: 0; transform: scale(0.95); }
+    15%  { opacity: 1; transform: scale(1); }
+    70%  { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  /* Waves */
+  .dolphin-wave {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 200%;
+    pointer-events: none;
+    z-index: 9990;
+    animation: waveScroll linear infinite;
+  }
+  @keyframes waveScroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  /* Rainbow arcs */
+  .dolphin-rainbow {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9989;
+    border-radius: 50%;
+    border: 6px solid transparent;
+    animation: rainbowArc 8s ease-in-out infinite;
+    opacity: 0.12;
+  }
+  @keyframes rainbowArc {
+    0%   { transform: scale(0.8) rotate(0deg);  opacity: 0.07; }
+    50%  { transform: scale(1.1) rotate(10deg); opacity: 0.15; }
+    100% { transform: scale(0.8) rotate(0deg);  opacity: 0.07; }
+  }
+
+  @keyframes rainbowShift {
+    0%   { color: #ff6ef7; }
+    20%  { color: #a78bfa; }
+    40%  { color: #60d8fa; }
+    60%  { color: #7fffb2; }
+    80%  { color: #ffe066; }
+    100% { color: #ff6ef7; }
+  }
+
+  @keyframes glitterRise {
+    0%   { transform: translateY(0)      scale(1)   rotate(0deg);   opacity: 1; }
+    100% { transform: translateY(-120px) scale(0.3) rotate(400deg); opacity: 0; }
+  }
+  .sparkle-particle {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    animation: glitterRise var(--dur, 1.6s) ease-out forwards;
+  }
+
+  body.dolphin-mode .hero            { background: linear-gradient(135deg, #ff6ef7 0%, #a78bfa 40%, #60d8fa 70%, #7fffb2 100%) !important; }
+  body.dolphin-mode .hero-name .first { animation: rainbowShift 1.5s linear infinite !important; }
+  body.dolphin-mode .hero-name .last  { animation: rainbowShift 1.5s linear infinite 0.5s !important; }
+  body.dolphin-mode .intro-section   { background: linear-gradient(135deg, #fff0fb, #e8d5ff, #d0f4ff) !important; }
+  body.dolphin-mode .reel-section    { background: linear-gradient(135deg, #1a003a, #003a5c, #002a1a) !important; }
+  body.dolphin-mode .cap-section     { background: linear-gradient(135deg, #3a0050, #001a5c, #003a2a) !important; }
+  body.dolphin-mode .cap-cell        { border-color: rgba(255,110,247,0.4) !important; }
+  body.dolphin-mode .cap-num         { color: #f9f871 !important; }
+  body.dolphin-mode footer           { background: linear-gradient(135deg, #1a003a, #003060) !important; }
+  body.dolphin-mode .intro-label     { color: #ff6ef7 !important; }
+  body.dolphin-mode .resume-section  { background: #fff0fb !important; }
+
   /* ========== RESPONSIVE ========== */
   @media (max-width: 900px) {
     .hero {
@@ -793,12 +964,18 @@
   <div class="hero-images">
     <div class="img-frame">
       <video src="reel01.mp4" autoplay muted loop playsinline></video>
+      <div class="reel-overlay"></div>
+      <div class="reel-grain"></div>
     </div>
     <div class="img-frame">
       <video src="reel02.mp4" autoplay muted loop playsinline></video>
+      <div class="reel-overlay"></div>
+      <div class="reel-grain"></div>
     </div>
     <div class="img-frame">
       <video src="reel03.mp4" autoplay muted loop playsinline></video>
+      <div class="reel-overlay"></div>
+      <div class="reel-grain"></div>
     </div>
   </div>
 
@@ -893,6 +1070,16 @@
         <h3>Team & Talent</h3>
         <p>Leading creative teams up to 15 and managing high-profile talent and brand partnerships.</p>
       </div>
+      <div class="cap-cell">
+        <div class="cap-num">05</div>
+        <h3>AI & Emerging Tools</h3>
+        <p>Yes, I know how to use AI. Prompt engineering, generative workflows, AI-assisted production — the whole thing. I even built this website with Claude Code. <button id="dolphin-btn" onclick="activateDolphinMode()">Click here for a fun surprise!</button></p>
+      </div>
+      <div class="cap-cell">
+        <div class="cap-num">06</div>
+        <h3>Content Strategy</h3>
+        <p>Full slate ideation and planning for daily live shows, liveops content calendars, and social media — from big-picture strategy down to what posts on Tuesday.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -928,6 +1115,7 @@
   </div>
 </footer>
 
+<script src="seasonal.js"></script>
 <script>
   const nav = document.querySelector('.site-nav');
   const heroName = document.querySelector('.hero-name');
@@ -967,6 +1155,184 @@
   }, { threshold: 0.1 });
 
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // ========== DOLPHIN MODE ==========
+  function activateDolphinMode() {
+    if (document.body.classList.contains('dolphin-mode')) return;
+    document.body.classList.add('dolphin-mode');
+
+    // ---- CSS vars ----
+    const root = document.documentElement;
+    root.style.setProperty('--red',       '#ff6ef7');
+    root.style.setProperty('--red-dark',  '#a78bfa');
+    root.style.setProperty('--red-bright','#f9f871');
+    root.style.setProperty('--cream',     '#fff0fb');
+    root.style.setProperty('--dark',      '#3a0050');
+    root.style.setProperty('--near-black','#1a003a');
+
+    // ---- Flash overlay ----
+    const flash = document.createElement('div');
+    flash.id = 'dolphin-flash';
+    flash.innerHTML = '<span>🐬 Dolphin Mode Activated 🌈</span>';
+    document.body.appendChild(flash);
+    flash.addEventListener('animationend', () => flash.remove());
+
+    // ---- Dolphin cursor ----
+    const cursor = document.createElement('div');
+    cursor.id = 'dolphin-cursor';
+    cursor.textContent = '🐬';
+    document.body.appendChild(cursor);
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top  = e.clientY + 'px';
+    });
+
+    // ---- Sparkle trail (mouse) ----
+    const sparkles = ['✨','⭐','🌟','💫','🦄','🌈','💜','💖','🎀','🌸','🍭','🦋'];
+    let lastSparkle = 0;
+    document.addEventListener('mousemove', e => {
+      const now = Date.now();
+      if (now - lastSparkle < 60) return;
+      lastSparkle = now;
+      const el = document.createElement('div');
+      el.className = 'sparkle-particle';
+      el.textContent = sparkles[Math.floor(Math.random() * sparkles.length)];
+      el.style.fontSize = `${0.9 + Math.random() * 1.2}rem`;
+      el.style.left = e.clientX + 'px';
+      el.style.top  = e.clientY + 'px';
+      el.style.setProperty('--dur', `${1.2 + Math.random() * 1}s`);
+      document.body.appendChild(el);
+      el.addEventListener('animationend', () => el.remove());
+    });
+
+    // ---- Ambient glitter rain ----
+    setInterval(() => {
+      const el = document.createElement('div');
+      el.className = 'sparkle-particle';
+      el.textContent = sparkles[Math.floor(Math.random() * sparkles.length)];
+      el.style.fontSize = `${0.8 + Math.random() * 1.4}rem`;
+      el.style.left = `${Math.random() * 100}vw`;
+      el.style.top  = `${20 + Math.random() * 70}vh`;
+      el.style.setProperty('--dur', `${1.5 + Math.random() * 1.5}s`);
+      document.body.appendChild(el);
+      el.addEventListener('animationend', () => el.remove());
+    }, 120);
+
+    // ---- Waves ----
+    const waveColors = [
+      ['rgba(167,139,250,0.45)', 12, 8],
+      ['rgba(96,216,250,0.35)',  10, 12],
+      ['rgba(255,110,247,0.3)',   8, 16],
+    ];
+    waveColors.forEach(([color, amp, speed]) => {
+      const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+      svg.setAttribute('viewBox','0 0 1440 80');
+      svg.setAttribute('preserveAspectRatio','none');
+      svg.style.cssText = `position:fixed;bottom:${Math.random()*60}px;left:0;width:200%;height:${amp*4}px;pointer-events:none;z-index:9990;`;
+      svg.style.animation = `waveScroll ${speed}s linear infinite`;
+      svg.innerHTML = `<path fill="${color}" d="M0,40 C180,${40-amp} 360,${40+amp} 540,40 C720,${40-amp} 900,${40+amp} 1080,40 C1260,${40-amp} 1440,${40+amp} 1440,40 L1440,80 L0,80 Z M1440,40 C1620,${40-amp} 1800,${40+amp} 1980,40 C2160,${40-amp} 2340,${40+amp} 2520,40 C2700,${40-amp} 2880,${40+amp} 2880,40 L2880,80 L1440,80 Z"/>`;
+      document.body.appendChild(svg);
+    });
+
+    // ---- Rainbow arcs ----
+    const arcColors = [
+      ['#ff6ef7','#a78bfa'],
+      ['#60d8fa','#7fffb2'],
+      ['#ffe066','#ff9de2'],
+    ];
+    arcColors.forEach(([c1, c2], i) => {
+      const arc = document.createElement('div');
+      arc.className = 'dolphin-rainbow';
+      const size = 300 + i * 180;
+      arc.style.cssText = `width:${size}px;height:${size}px;border-image:none;border-color:transparent;background:none;box-shadow:0 0 0 6px ${c1}, 0 0 0 12px ${c2};border-radius:50%;left:${10+i*20}vw;top:${15+i*12}vh;animation-delay:${i*2.5}s;`;
+      document.body.appendChild(arc);
+    });
+
+    // ---- Vaporwave music (Web Audio API) ----
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (AudioCtx) {
+      const ctx = new AudioCtx();
+
+      // Master chain: filter → delay → gain → out
+      const master = ctx.createGain();
+      master.gain.value = 0.35;
+      master.connect(ctx.destination);
+
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.value = 1200;
+      filter.Q.value = 1.2;
+      filter.connect(master);
+
+      const delay = ctx.createDelay(2.0);
+      delay.delayTime.value = 0.45;
+      const delayFb = ctx.createGain();
+      delayFb.gain.value = 0.42;
+      const delayOut = ctx.createGain();
+      delayOut.gain.value = 0.28;
+      delay.connect(delayFb);
+      delayFb.connect(delay);
+      delay.connect(delayOut);
+      delayOut.connect(master);
+
+      // Dreamy chord progression (Am → F → C → G)
+      const chords = [
+        [220.00, 261.63, 329.63, 440.00], // Am
+        [174.61, 220.00, 261.63, 349.23], // F
+        [261.63, 329.63, 392.00, 523.25], // C
+        [196.00, 246.94, 293.66, 392.00], // G
+      ];
+
+      function playChord(index, time) {
+        const freqs = chords[index % chords.length];
+        freqs.forEach(freq => {
+          [-5, 0, 5].forEach(detune => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.value = freq;
+            osc.detune.value = detune;
+            gain.gain.setValueAtTime(0, time);
+            gain.gain.linearRampToValueAtTime(0.18, time + 0.8);
+            gain.gain.linearRampToValueAtTime(0.12, time + 3.0);
+            gain.gain.linearRampToValueAtTime(0,    time + 4.2);
+            osc.connect(gain);
+            gain.connect(filter);
+            gain.connect(delay);
+            osc.start(time);
+            osc.stop(time + 4.5);
+          });
+        });
+        // Soft bass note
+        const bass = ctx.createOscillator();
+        const bassGain = ctx.createGain();
+        bass.type = 'triangle';
+        bass.frequency.value = freqs[0] / 2;
+        bassGain.gain.setValueAtTime(0, time);
+        bassGain.gain.linearRampToValueAtTime(0.22, time + 1.0);
+        bassGain.gain.linearRampToValueAtTime(0, time + 4.0);
+        bass.connect(bassGain);
+        bassGain.connect(master);
+        bass.start(time);
+        bass.stop(time + 4.5);
+      }
+
+      let chordIndex = 0;
+      const chordLen = 3.8;
+      ctx.resume().then(() => {
+        playChord(chordIndex++, ctx.currentTime);
+        setInterval(() => {
+          playChord(chordIndex++, ctx.currentTime + 0.05);
+        }, chordLen * 1000);
+      });
+    }
+
+    // ---- Button ----
+    const btn = document.getElementById('dolphin-btn');
+    btn.textContent = '🐬 dolphin mode activated 🌈';
+    btn.style.cursor = 'none';
+    btn.onclick = null;
+  }
 </script>
 </body>
 </html>
