@@ -177,6 +177,8 @@
   /* ========== TITLE PAGE ========== */
   .title-page-wrap {
     position: relative;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transform-style: preserve-3d;
   }
 
   .title-page-wrap::before {
@@ -515,7 +517,7 @@
     font-size: 0.85rem;
     letter-spacing: 0.5em;
     text-transform: uppercase;
-    color: rgba(242,237,228,0.35);
+    color: rgba(242,237,228,0.85);
     display: block;
   }
 
@@ -551,6 +553,7 @@
     .screenplay-card { grid-template-columns: 1fr; gap: 2rem; }
     .title-page-wrap { max-width: 280px; }
   }
+
 </style>
 </head>
 <body>
@@ -645,5 +648,20 @@
 </section>
 
 <script src="seasonal.js"></script>
+<script>
+  // Title page tilt
+  document.querySelectorAll('.title-page-wrap').forEach(wrap => {
+    wrap.addEventListener('mousemove', e => {
+      const rect = wrap.getBoundingClientRect();
+      const dx = (e.clientX - rect.left - rect.width  / 2) / (rect.width  / 2);
+      const dy = (e.clientY - rect.top  - rect.height / 2) / (rect.height / 2);
+      wrap.style.transform = `perspective(800px) rotateY(${dx * 7}deg) rotateX(${-dy * 5}deg)`;
+    });
+    wrap.addEventListener('mouseleave', () => {
+      wrap.style.transform = 'perspective(800px) rotateY(0deg) rotateX(0deg)';
+    });
+  });
+
+</script>
 </body>
 </html>

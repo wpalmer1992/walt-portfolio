@@ -206,9 +206,18 @@
     line-height: 0.88;
     letter-spacing: -0.02em;
     color: var(--red);
-    opacity: 0;
-    animation: fadeIn 0.8s ease 0.4s forwards;
     will-change: transform;
+  }
+
+  .hero-name .letter {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(0.4em);
+    animation: letterStamp 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  @keyframes letterStamp {
+    to { opacity: 1; transform: translateY(0); }
   }
 
   .hero-name .first {
@@ -310,6 +319,8 @@
   .intro-photo-wrap {
     position: relative;
     width: 100%;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transform-style: preserve-3d;
   }
 
   .intro-photo-wrap::before {
@@ -336,6 +347,11 @@
     display: block;
     mix-blend-mode: luminosity;
     filter: contrast(1.2) brightness(0.88);
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .intro-photo:hover img {
+    transform: scale(1.06);
   }
 
   .photo-grain {
@@ -532,7 +548,22 @@
     border-right: 1px solid rgba(242,237,228,0.15);
     border-bottom: 1px solid rgba(242,237,228,0.15);
     transition: background 0.4s;
+    position: relative;
+    overflow: hidden;
   }
+
+  .cap-cell::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 2px;
+    background: var(--red);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .cap-cell:hover::before { transform: scaleX(1); }
 
   .cap-cell:nth-child(2n) { border-right: none; }
   .cap-cell:nth-child(n+5) { border-bottom: none; }
@@ -792,7 +823,21 @@
     to { opacity: 1; }
   }
 
-  /* ========== DOLPHIN MODE ========== */
+  /* ========== CURSOR GLOW ========== */
+  #cursor-glow {
+    position: fixed;
+    width: 380px;
+    height: 380px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(200,25,30,0.1) 0%, transparent 70%);
+    transition: background 0.6s ease;
+    mix-blend-mode: screen;
+  }
+
+/* ========== DOLPHIN MODE ========== */
   #dolphin-btn {
     background: none;
     border: none;
@@ -948,6 +993,8 @@
 </head>
 <body>
 
+<div id="cursor-glow"></div>
+
 <!-- ========== NAV ========== -->
 <nav class="site-nav">
   <a href="#about">About</a>
@@ -1010,7 +1057,7 @@
     <div class="intro-copy">
       <div class="intro-label">ABOUT</div>
       <p class="intro-text">
-        A writer and producer with <strong>seven years</strong> building stories for every screen — from Snapchat series reaching <strong>millions daily</strong>, to a <strong>#1 podcast</strong> on Apple, VR-powered live shows, and interactive puzzle games delivered to your door.
+        A writer and producer with <strong>twelve years of experience</strong> building stories for every screen — from Snapchat series reaching <strong>millions daily</strong>, to a <strong>#1 podcast</strong> on Apple, VR-powered live shows, and interactive puzzle games delivered to your door.
       </p>
     </div>
     <div class="intro-photo-wrap">
@@ -1089,7 +1136,7 @@
 <section class="resume-section reveal">
   <div class="resume-row">
     <div class="resume-label">Resume</div>
-    <a href="resume.pdf" download class="resume-download">
+    <a href="Walt_Resume_V3.pdf" download class="resume-download">
       <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 16l-6-6h4V4h4v6h4l-6 6zm-7 4h14v-2H5v2z"/></svg>
       Download
     </a>
@@ -1155,6 +1202,65 @@
   }, { threshold: 0.1 });
 
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // ========== PAGE WIPE (entry) ==========
+// ========== CURSOR GLOW ==========
+  const glow = document.getElementById('cursor-glow');
+  let glowX = window.innerWidth / 2, glowY = window.innerHeight / 2;
+  let targetGlowX = glowX, targetGlowY = glowY;
+
+  const darkSections  = ['.hero', '.reel-section', '.cap-section', 'footer'];
+  const lightSections = ['.intro-section', '.resume-section'];
+
+  document.addEventListener('mousemove', e => {
+    targetGlowX = e.clientX;
+    targetGlowY = e.clientY;
+    // Color based on element under cursor
+    const el = document.elementFromPoint(e.clientX, e.clientY);
+    const isLight = el && el.closest('.intro-section, .resume-section');
+    glow.style.background = isLight
+      ? 'radial-gradient(circle, rgba(14,14,12,0.07) 0%, transparent 70%)'
+      : 'radial-gradient(circle, rgba(200,25,30,0.12) 0%, transparent 70%)';
+  });
+
+  (function animateGlow() {
+    glowX += (targetGlowX - glowX) * 0.07;
+    glowY += (targetGlowY - glowY) * 0.07;
+    glow.style.left = glowX + 'px';
+    glow.style.top  = glowY + 'px';
+    requestAnimationFrame(animateGlow);
+  })();
+
+  // ========== PHOTO TILT ==========
+  const photoWrap = document.querySelector('.intro-photo-wrap');
+  photoWrap.addEventListener('mousemove', e => {
+    const rect = photoWrap.getBoundingClientRect();
+    const dx = (e.clientX - rect.left - rect.width  / 2) / (rect.width  / 2);
+    const dy = (e.clientY - rect.top  - rect.height / 2) / (rect.height / 2);
+    photoWrap.style.transform = `perspective(800px) rotateY(${dx * 7}deg) rotateX(${-dy * 5}deg)`;
+  });
+  photoWrap.addEventListener('mouseleave', () => {
+    photoWrap.style.transform = 'perspective(800px) rotateY(0deg) rotateX(0deg)';
+  });
+
+  // ========== LETTER STAMP ==========
+  function stampWord(el, startDelay) {
+    const text = el.textContent.trim();
+    el.textContent = '';
+    [...text].forEach((char, i) => {
+      const span = document.createElement('span');
+      span.className = 'letter';
+      span.textContent = char;
+      span.style.animationDelay = `${startDelay + i * 80}ms`;
+      el.appendChild(span);
+    });
+    return startDelay + text.length * 80;
+  }
+
+  const firstEl = document.querySelector('.hero-name .first');
+  const lastEl  = document.querySelector('.hero-name .last');
+  const lastLetterLands = stampWord(firstEl, 300);
+  stampWord(lastEl, lastLetterLands + 40);
 
   // ========== DOLPHIN MODE ==========
   function activateDolphinMode() {
