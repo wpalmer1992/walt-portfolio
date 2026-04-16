@@ -19,7 +19,13 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    background: var(--cream);
+    background-color: var(--cream);
+    background-image:
+      linear-gradient(rgba(242,237,228,0.62), rgba(242,237,228,0.62)),
+      url('Texturelabs_Paper_361XL.jpg');
+    background-size: auto, cover;
+    background-attachment: scroll, scroll;
+    background-position: center, center;
     color: var(--text);
     font-family: 'Barlow', sans-serif;
     overflow-x: hidden;
@@ -33,7 +39,7 @@
     inset: 0;
     pointer-events: none;
     z-index: 1000;
-    opacity: 0.4;
+    opacity: 0.18;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E");
     background-repeat: repeat;
     background-size: 200px 200px;
@@ -544,6 +550,19 @@
     font-size: 0.75rem;
     letter-spacing: 0.2em;
     color: rgba(242,237,228,0.35);
+  }
+
+  /* ========== TEXT TEXTURE ========== */
+  .screenplays-header h2,
+  .screenplay-title,
+  .screenplay-logline {
+    background-image: url('Texturelabs_Paper_375XL.jpg');
+    background-size: 900px auto;
+    background-attachment: scroll;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
   }
 
   /* ========== RESPONSIVE ========== */
