@@ -974,6 +974,137 @@
     line-height: 1.2;
   }
 
+  .hero-mobile-bg { display: none; }
+
+  /* ========== HAMBURGER ========== */
+  .nav-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    z-index: 1001;
+  }
+  .nav-toggle span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--text);
+    transition: transform 0.3s ease, opacity 0.3s ease, background 0.3s;
+    transform-origin: center;
+  }
+  .nav-toggle.open span { background: var(--cream); }
+  .nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-toggle.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  .site-nav.scrolled .nav-toggle span { background: var(--cream); }
+  .nav-links { display: flex; gap: 2.5rem; align-items: center; }
+
+  /* ========== RESPONSIVE ========== */
+  @media (max-width: 768px) {
+    /* Nav */
+    .nav-toggle { display: flex; }
+    .site-nav { padding: 1.2rem 1.5rem; }
+    .nav-links {
+      position: fixed;
+      inset: 0;
+      background: var(--dark);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2.5rem;
+      transform: translateX(100%);
+      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      z-index: 800;
+    }
+    .nav-links.open { transform: translateX(0); }
+    .nav-links a {
+      font-size: 1.3rem !important;
+      letter-spacing: 0.2em;
+      color: var(--cream) !important;
+      -webkit-text-fill-color: var(--cream) !important;
+      background-image: none !important;
+    }
+    .nav-links a::after { display: none; }
+
+    /* Hero */
+    .hero { grid-template-columns: 1fr; min-height: 100vh; }
+    .hero-images { display: none; }
+    .hero-type {
+      position: relative;
+      overflow: hidden;
+      min-height: 100vh;
+      padding: 0 1.5rem;
+      background: var(--near-black);
+    }
+    .hero-type::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(14,14,12,0.4) 0%, rgba(14,14,12,0.15) 40%, rgba(14,14,12,0.6) 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+    .hero-name, .hero-descriptor { position: relative; z-index: 2; }
+    .hero-name .last .letter, .hero-descriptor {
+      background-image: none !important;
+      -webkit-text-fill-color: var(--cream) !important;
+      color: var(--cream) !important;
+    }
+    .hero-mobile-bg {
+      display: block;
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    .hero-mobile-bg video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: grayscale(1) contrast(1.3) brightness(0.5);
+    }
+
+    /* Halftone divider */
+    .divider-text {
+      justify-content: flex-start;
+      gap: 2.5rem;
+      min-width: max-content;
+      animation: ticker 16s linear infinite;
+    }
+    @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-25%); } }
+
+    /* Intro */
+    .intro-section { padding: 4rem 1.5rem; }
+    .intro-inner { grid-template-columns: 1fr; gap: 3rem; }
+    .intro-photo-wrap { max-width: 280px; margin: 0 auto; }
+
+    /* Reel */
+    .reel-section { padding: 4rem 1.5rem; }
+
+    /* Cap */
+    .cap-section { padding: 4rem 1.5rem; }
+    .cap-grid { grid-template-columns: 1fr; }
+    .cap-cell { border-right: none !important; border-bottom: 1px solid rgba(242,237,228,0.15) !important; }
+    .cap-cell:last-child { border-bottom: none !important; }
+
+    /* Resume */
+    .resume-section { padding: 4rem 1.5rem; }
+    .resume-row { flex-direction: column; align-items: flex-start; }
+
+    /* Footer */
+    footer { padding: 4rem 1.5rem; }
+    .footer-inner { grid-template-columns: 1fr; gap: 2rem; align-items: start; }
+    .footer-links { align-items: flex-start; }
+    .footer-bottom { flex-direction: column; gap: 0.5rem; }
+
+    /* Cursor glow */
+    #cursor-glow { display: none; }
+  }
+
 </style>
 </head>
 <body>
@@ -982,11 +1113,16 @@
 
 <!-- ========== NAV ========== -->
 <nav class="site-nav">
-  <a href="#about">About</a>
-  <a href="#reel">Reel</a>
-  <a href="writing.html">Writing</a>
-  <a href="clearing-my-name.html">Clearing My Name</a>
-  <a href="contact.html">Contact</a>
+  <button class="nav-toggle" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#reel">Reel</a>
+    <a href="writing.html">Writing</a>
+    <a href="clearing-my-name.html">Clearing My Name</a>
+    <a href="contact.html">Contact</a>
+  </div>
 </nav>
 
 <!-- ========== HERO ========== -->
@@ -1014,6 +1150,9 @@
 
   <!-- Right: massive name -->
   <div class="hero-type">
+    <div class="hero-mobile-bg">
+      <video src="reel01.mp4" autoplay muted loop playsinline></video>
+    </div>
     <div class="hero-name">
       <span class="first">walt</span>
       <span class="last">palmer</span>
@@ -1139,6 +1278,27 @@
 
 <script src="seasonal.js"></script>
 <script>
+  // ========== MOBILE TICKER ==========
+  if (window.innerWidth <= 768) {
+    const dividerText = document.querySelector('.divider-text');
+    if (dividerText) {
+      const original = dividerText.innerHTML;
+      dividerText.innerHTML = original + original + original + original;
+    }
+  }
+
+  // ========== HAMBURGER ==========
+  const navToggle = document.querySelector('.nav-toggle');
+  const navLinks  = document.querySelector('.nav-links');
+  navToggle.addEventListener('click', () => {
+    navToggle.classList.toggle('open');
+    navLinks.classList.toggle('open');
+  });
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    navToggle.classList.remove('open');
+    navLinks.classList.remove('open');
+  }));
+
   const nav = document.querySelector('.site-nav');
   const heroName = document.querySelector('.hero-name');
   const heroDescriptor = document.querySelector('.hero-descriptor');
@@ -1164,16 +1324,18 @@
 
       nav.classList.toggle('scrolled', scrollY > viewH * 0.7);
 
-      if (scrollY < viewH) {
-        const offset = scrollY * 0.4;
-        heroName.style.transform       = `translateY(-${offset}px)`;
-        heroDescriptor.style.transform = `translateY(-${offset * 0.6}px)`;
-      }
+      if (window.innerWidth > 768) {
+        if (scrollY < viewH) {
+          const offset = scrollY * 0.4;
+          heroName.style.transform       = `translateY(-${offset}px)`;
+          heroDescriptor.style.transform = `translateY(-${offset * 0.6}px)`;
+        }
 
-      if (scrollY + viewH > introTop && scrollY < introBottom) {
-        const offset = (scrollY - introTop) * 0.12;
-        introCopy.style.transform  = `translateY(-${offset}px)`;
-        introPhoto.style.transform = `translateY(-${offset * 0.6}px)`;
+        if (scrollY + viewH > introTop && scrollY < introBottom) {
+          const offset = (scrollY - introTop) * 0.12;
+          introCopy.style.transform  = `translateY(-${offset}px)`;
+          introPhoto.style.transform = `translateY(-${offset * 0.6}px)`;
+        }
       }
 
       ticking = false;
