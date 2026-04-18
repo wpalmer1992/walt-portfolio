@@ -565,12 +565,57 @@
     color: transparent;
   }
 
+  /* ========== HAMBURGER ========== */
+  .nav-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    z-index: 1001;
+  }
+  .nav-toggle span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--cream);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    transform-origin: center;
+  }
+  .nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-toggle.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  .nav-links { display: flex; gap: 2.5rem; align-items: center; }
+
   /* ========== RESPONSIVE ========== */
-  @media (max-width: 900px) {
-    .page-header { padding: 8rem 2rem 4rem; }
-    .screenplays-section { padding: 4rem 2rem; }
+  @media (max-width: 768px) {
+    .nav-toggle { display: flex; }
+    .site-nav { padding: 1.2rem 1.5rem; }
+    .nav-links {
+      position: fixed;
+      inset: 0;
+      background: var(--dark);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2.5rem;
+      transform: translateX(100%);
+      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      z-index: 800;
+    }
+    .nav-links.open { transform: translateX(0); }
+    .nav-links a { font-size: 1.3rem; letter-spacing: 0.2em; color: var(--cream); }
+    .nav-links a::after { display: none; }
+
+    .page-header { padding: 8rem 1.5rem 4rem; }
+    .screenplays-section { padding: 4rem 1.5rem; }
     .screenplay-card { grid-template-columns: 1fr; gap: 2rem; }
-    .title-page-wrap { max-width: 280px; }
+    .title-page-wrap { max-width: 260px; }
+    .screenplay-title { font-size: 1.8rem; }
+    .screenplay-logline { font-size: 0.95rem; }
   }
 
 </style>
@@ -578,11 +623,16 @@
 <body>
 
 <nav class="site-nav">
-  <a href="index.html#about">About</a>
-  <a href="index.html#reel">Reel</a>
-  <a href="writing.html">Writing</a>
-  <a href="clearing-my-name.html">Clearing My Name</a>
-  <a href="contact.html">Contact</a>
+  <button class="nav-toggle" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="nav-links">
+    <a href="index.html#about">About</a>
+    <a href="index.html#reel">Reel</a>
+    <a href="writing.html">Writing</a>
+    <a href="clearing-my-name.html">Clearing My Name</a>
+    <a href="contact.html">Contact</a>
+  </div>
 </nav>
 
 <!-- ========== PAGE HEADER ========== -->
@@ -669,6 +719,18 @@
 
 <script src="seasonal.js"></script>
 <script>
+  // Hamburger
+  const navToggle = document.querySelector('.nav-toggle');
+  const navLinks  = document.querySelector('.nav-links');
+  navToggle.addEventListener('click', () => {
+    navToggle.classList.toggle('open');
+    navLinks.classList.toggle('open');
+  });
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    navToggle.classList.remove('open');
+    navLinks.classList.remove('open');
+  }));
+
   // Title page tilt
   document.querySelectorAll('.title-page-wrap').forEach(wrap => {
     wrap.addEventListener('mousemove', e => {

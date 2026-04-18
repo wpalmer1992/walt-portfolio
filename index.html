@@ -974,39 +974,6 @@
     line-height: 1.2;
   }
 
-  /* ========== RESPONSIVE ========== */
-  @media (max-width: 900px) {
-    .hero {
-      grid-template-columns: 1fr;
-      min-height: auto;
-    }
-    .hero-images {
-      padding: 3rem 2rem 1rem;
-      flex-direction: row;
-      overflow-x: auto;
-      gap: 0.5rem;
-    }
-    .img-frame {
-      width: 200px;
-      min-width: 200px;
-      margin-left: 0 !important;
-    }
-    .hero-type { padding: 1rem 2rem 3rem; }
-    .cap-grid { grid-template-columns: 1fr; }
-    .cap-cell { border-right: none !important; border-bottom: 1px solid rgba(242,237,228,0.15) !important; }
-    .cap-cell:last-child { border-bottom: none !important; }
-    .intro-section, .resume-section { padding-left: 2rem; padding-right: 2rem; }
-    .reel-section, .cap-section { padding-left: 2rem; padding-right: 2rem; }
-    .intro-inner { grid-template-columns: 1fr; gap: 2.5rem; }
-    .intro-photo { max-width: 320px; aspect-ratio: 4/5; }
-    footer { padding: 4rem 2rem; }
-    .footer-inner { grid-template-columns: 1fr; }
-    .footer-links { align-items: flex-start; }
-  }
-
-  @media (max-width: 500px) {
-    .hero-name .first, .hero-name .last { font-size: 4rem; }
-  }
 </style>
 </head>
 <body>
@@ -1198,8 +1165,8 @@
     if (ticking) return;
     ticking = true;
     requestAnimationFrame(() => {
-      const scrollY    = window.scrollY;
-      const viewH      = window.innerHeight;
+      const scrollY = window.scrollY;
+      const viewH   = window.innerHeight;
 
       nav.classList.toggle('scrolled', scrollY > viewH * 0.7);
 
