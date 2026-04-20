@@ -110,6 +110,7 @@
     display: block;
     filter: grayscale(1) contrast(1.4) brightness(1.15);
     transition: filter 0.6s ease;
+    will-change: filter;
   }
 
   .img-frame:hover video {
@@ -124,8 +125,7 @@
     inset: 0;
     z-index: 3;
     pointer-events: none;
-    opacity: 0.65;
-    mix-blend-mode: overlay;
+    opacity: 0.35;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)'/%3E%3C/svg%3E");
     background-repeat: repeat;
     background-size: 120px 120px;
@@ -133,7 +133,7 @@
   }
 
   .img-frame:hover .reel-grain {
-    opacity: 0.25;
+    opacity: 0.15;
   }
 
   .img-frame::before { content: none; }
@@ -332,8 +332,7 @@
     inset: 0;
     z-index: 2;
     pointer-events: none;
-    opacity: 0.55;
-    mix-blend-mode: overlay;
+    opacity: 0.25;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)'/%3E%3C/svg%3E");
     background-repeat: repeat;
     background-size: 160px 160px;
@@ -1326,44 +1325,13 @@
   }));
 
   const nav = document.querySelector('.site-nav');
-  const heroName = document.querySelector('.hero-name');
-  const heroDescriptor = document.querySelector('.hero-descriptor');
-  const introSection = document.querySelector('.intro-section');
-  const introCopy = document.querySelector('.intro-copy');
-  const introPhoto = document.querySelector('.intro-photo-wrap');
-
-  // Cache layout values once — reading these inside the scroll handler causes layout thrashing
-  let introTop    = introSection.offsetTop;
-  let introBottom = introTop + introSection.offsetHeight;
-  window.addEventListener('resize', () => {
-    introTop    = introSection.offsetTop;
-    introBottom = introTop + introSection.offsetHeight;
-  });
 
   let ticking = false;
   window.addEventListener('scroll', () => {
     if (ticking) return;
     ticking = true;
     requestAnimationFrame(() => {
-      const scrollY = window.scrollY;
-      const viewH   = window.innerHeight;
-
-      nav.classList.toggle('scrolled', scrollY > viewH * 0.7);
-
-      if (window.innerWidth > 768) {
-        if (scrollY < viewH) {
-          const offset = scrollY * 0.4;
-          heroName.style.transform       = `translate3d(0, -${offset}px, 0)`;
-          heroDescriptor.style.transform = `translate3d(0, -${offset * 0.6}px, 0)`;
-        }
-
-        if (scrollY + viewH > introTop && scrollY < introBottom) {
-          const offset = (scrollY - introTop) * 0.12;
-          introCopy.style.transform  = `translate3d(0, -${offset}px, 0)`;
-          introPhoto.style.transform = `translate3d(0, -${offset * 0.6}px, 0)`;
-        }
-      }
-
+      nav.classList.toggle('scrolled', window.scrollY > window.innerHeight * 0.7);
       ticking = false;
     });
   }, { passive: true });
