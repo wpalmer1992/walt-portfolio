@@ -4,6 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Contact — Walt Palmer</title>
+<meta name="description" content="Get in touch with Walt Palmer — Writer & Producer.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://waltpalmer4.com/contact.html">
+<meta property="og:title" content="Contact — Walt Palmer">
+<meta property="og:description" content="Get in touch with Walt Palmer — Writer & Producer.">
+<meta property="og:image" content="https://waltpalmer4.com/hero-poster.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Contact — Walt Palmer">
+<meta name="twitter:description" content="Get in touch with Walt Palmer — Writer & Producer.">
+<meta name="twitter:image" content="https://waltpalmer4.com/hero-poster.jpg">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230E0E0C'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial Black,sans-serif' font-weight='900' font-size='13' fill='%23C8191E' letter-spacing='-1'%3EWP%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -84,6 +94,9 @@
   }
 
   .site-nav a:hover::after { width: 100%; }
+  .site-nav a[aria-current="page"] { color: var(--red); }
+  .site-nav a[aria-current="page"]::after { width: 100%; background: var(--red); }
+  .site-nav.scrolled a[aria-current="page"] { color: var(--red); }
 
   /* ========== PAGE HEADER ========== */
   .page-header {
@@ -336,7 +349,7 @@
     <a href="index.html#reel">Reel</a>
     <a href="writing.html">Writing</a>
     <a href="clearing-my-name.html">Clearing My Name</a>
-    <a href="contact.html">Contact</a>
+    <a href="contact.html" aria-current="page">Contact</a>
   </div>
 </nav>
 
@@ -462,6 +475,20 @@
       }, i * 60);
     }
   }
+
+  // ========== PAGE TRANSITIONS ==========
+  document.querySelectorAll('a[href]').forEach(link => {
+    const href = link.getAttribute('href');
+    if (!href || href.startsWith('#') || href.startsWith('http') || link.hasAttribute('download')) return;
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const loader = document.getElementById('page-loader');
+      loader.style.transition = 'opacity 0.25s ease';
+      loader.style.opacity = '1';
+      loader.style.pointerEvents = 'auto';
+      setTimeout(() => { window.location.href = href; }, 270);
+    });
+  });
 </script>
 
 <style>
