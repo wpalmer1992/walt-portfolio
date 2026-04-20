@@ -293,6 +293,7 @@
     transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     transform-style: preserve-3d;
     will-change: transform;
+    transform: translate3d(0, 0, 0);
   }
 
   .intro-photo-wrap::before {
@@ -841,7 +842,6 @@
     transform: translate(-50%, -50%);
     background: radial-gradient(circle, rgba(200,25,30,0.1) 0%, transparent 70%);
     transition: background 0.6s ease;
-    mix-blend-mode: screen;
   }
 
 /* ========== DOLPHIN MODE ========== */
@@ -1354,20 +1354,20 @@
       if (window.innerWidth > 768) {
         if (scrollY < viewH) {
           const offset = scrollY * 0.4;
-          heroName.style.transform       = `translateY(-${offset}px)`;
-          heroDescriptor.style.transform = `translateY(-${offset * 0.6}px)`;
+          heroName.style.transform       = `translate3d(0, -${offset}px, 0)`;
+          heroDescriptor.style.transform = `translate3d(0, -${offset * 0.6}px, 0)`;
         }
 
         if (scrollY + viewH > introTop && scrollY < introBottom) {
           const offset = (scrollY - introTop) * 0.12;
-          introCopy.style.transform  = `translateY(-${offset}px)`;
-          introPhoto.style.transform = `translateY(-${offset * 0.6}px)`;
+          introCopy.style.transform  = `translate3d(0, -${offset}px, 0)`;
+          introPhoto.style.transform = `translate3d(0, -${offset * 0.6}px, 0)`;
         }
       }
 
       ticking = false;
     });
-  });
+  }, { passive: true });
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
