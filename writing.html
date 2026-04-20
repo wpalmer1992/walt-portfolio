@@ -623,12 +623,16 @@
     .nav-links a { font-size: 1.3rem; letter-spacing: 0.2em; color: var(--cream); }
     .nav-links a::after { display: none; }
 
-    .page-header { padding: 8rem 1.5rem 4rem; }
-    .screenplays-section { padding: 4rem 1.5rem; }
-    .screenplay-card { grid-template-columns: 1fr; gap: 2rem; }
-    .title-page-wrap { max-width: 260px; }
-    .screenplay-title { font-size: 1.8rem; }
-    .screenplay-logline { font-size: 0.95rem; }
+    .page-header { padding: 5.5rem 1.5rem 3rem; }
+    .screenplays-section { padding: 3rem 1.5rem 4rem; }
+    .screenplays-header { margin-bottom: 2rem; }
+    .screenplay-card { grid-template-columns: 1fr; gap: 2.5rem; padding: 2.5rem 0; }
+    .title-page-wrap { max-width: min(82vw, 320px); margin: 0 auto; }
+    .title-page-wrap::before { inset: 8px -8px -8px 8px; }
+    .screenplay-info { padding-top: 0; }
+    .screenplay-title { font-size: 2rem; }
+    .screenplay-logline { font-size: 0.95rem; line-height: 1.7; margin-bottom: 1.5rem; }
+    .screenplay-meta { margin-bottom: 0.8rem; }
   }
 
 </style>
