@@ -1041,10 +1041,11 @@
       pointer-events: none;
     }
     .hero-name, .hero-descriptor { position: relative; z-index: 2; }
-    .hero-name .last .letter, .hero-descriptor {
-      background-image: none !important;
-      -webkit-text-fill-color: var(--cream) !important;
+    .hero-name .last,
+    .hero-name .last .letter,
+    .hero-descriptor {
       color: var(--cream) !important;
+      -webkit-text-fill-color: var(--cream) !important;
     }
     .hero-mobile-bg {
       display: block;
