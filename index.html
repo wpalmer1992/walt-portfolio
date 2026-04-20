@@ -1080,9 +1080,11 @@
 
     /* Cap */
     .cap-section { padding: 4rem 1.5rem; }
-    .cap-grid { grid-template-columns: 1fr; }
-    .cap-cell { border-right: none !important; border-bottom: 1px solid rgba(242,237,228,0.15) !important; }
-    .cap-cell:last-child { border-bottom: none !important; }
+    .cap-grid { grid-template-columns: 1fr 1fr; }
+    .cap-cell { padding: 1.5rem; }
+    .cap-cell:nth-child(odd) { border-right: 1px solid rgba(242,237,228,0.15) !important; }
+    .cap-cell:nth-child(even) { border-right: none !important; }
+    .cap-cell:nth-last-child(-n+2) { border-bottom: none !important; }
 
     /* Resume */
     .resume-section { padding: 4rem 1.5rem; }
